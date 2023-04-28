@@ -17,4 +17,5 @@ public class EventsListener extends ListenerAdapter {
             event.getChannel().sendMessage("Vous vouliez dire JEANNE LOL ? MO MO MOTUS !").queue();
         }
     }
+
 }
