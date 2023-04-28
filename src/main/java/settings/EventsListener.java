@@ -14,7 +14,7 @@ public class EventsListener extends ListenerAdapter {
         } else if (message.contains("peter")) {
             event.getChannel().sendMessage("Vous vouliez dire PETEUR non ? MO MO MOTUS !").queue();
         } else if (message.contains("jun")) {
-            event.getChannel().sendMessage("Vous vouliez dire JEANNE non ? MO MO MOTUS !").queue();
+            event.getChannel().sendMessage("Vous vouliez dire JEANNE ZZZZZZZZZZ ? MO MO MOTUS !").queue();
         }
     }
 }
