@@ -11,6 +11,9 @@ public class EventsListener extends ListenerAdapter {
 
         if (message.contains("thibault")) {
             event.getChannel().sendMessage("Vous vouliez dire TIBOLTHE non ? MO MO MOTUS !").queue();
+        } else if (message.contains("peter")) {
+            event.getChannel().sendMessage("Vous vouliez dire PETEUR non ? MO MO MOTUS !").queue();
+
         }
     }
 }
