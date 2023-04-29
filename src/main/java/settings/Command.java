@@ -55,6 +55,10 @@ public class Command extends ListenerAdapter {
                     event.reply("Mot mis à jour : " + updatedMaskedWord).queue();
                 }
             }
+        } else if (event.getName().equals("reset")) {
+            guessWord = null;
+            chooseWord = null;
+            event.reply("La partie en cours a été annulée.").queue();
         }
     }
 }
