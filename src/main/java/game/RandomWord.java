@@ -12,6 +12,7 @@ public class RandomWord extends ListenerAdapter {
 
     public RandomWord() {
         // FETCH UNE API
+        words.add("TEST");
         words.add("THIBOL");
         words.add("JEANNE");
         words.add("PETEUR");
@@ -29,19 +30,30 @@ public class RandomWord extends ListenerAdapter {
             secondIndex = random.nextInt(wordLength);
         }
 
-        // Construire le mot masqué avec des tirets
         StringBuilder maskedWord = new StringBuilder();
-        for (int i = 0; i < wordLength; i++) {
-            if (i == firstIndex || i == secondIndex) {
-                maskedWord.append(word.charAt(i));
-            } else {
-                maskedWord.append('-');
+
+        if (wordLength < 6) {
+            for (int i = 0; i < wordLength; i++) {
+                if (i == firstIndex) {
+                    maskedWord.append(word.charAt(i));
+                } else {
+                    maskedWord.append('-');
+                }
+            }
+        } else {
+            for (int i = 0; i < wordLength; i++) {
+                if (i == firstIndex || i == secondIndex) {
+                    maskedWord.append(word.charAt(i));
+                } else {
+                    maskedWord.append('-');
+                }
             }
         }
+
+        // Construire le mot masqué avec des tirets
 
         return maskedWord.toString();
     }
 
-    // public boolean isMatching() {
-    // }
+    // public boolean isMatching(){}
 }
