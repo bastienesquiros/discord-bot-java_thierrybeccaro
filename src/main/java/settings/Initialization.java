@@ -11,7 +11,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class Initialization {
 
     public static void main(String[] args) throws LoginException, InterruptedException {
-        JDA jda = JDABuilder.createDefault("MTEwMTU4MTU3ODAwNzc2MDkzNg.GRa2zD._anOnNiXr6Gv-wGUZspZOEEy273LGuVyMAX9uo")
+        JDA jda = JDABuilder.createDefault(
+                "MTEwMTU4MTU3ODAwNzc2MDkzNg.GRa2zD._anOnNiXr6Gv-wGUZspZOEEy273LGuVyMAX9uo")
                 .enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
                         GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                         GatewayIntent.MESSAGE_CONTENT)
@@ -20,11 +21,15 @@ public class Initialization {
                 .build();
 
         jda.upsertCommand("jouer", "Lancez une partie de MOTUS")
-
-                .addOption(OptionType.STRING, "mot", "Le mot à deviner", false, false).setGuildOnly(true).queue();
+                .addOption(OptionType.STRING, "mot", "Le mot à deviner", false) // false means this
+                                                                                // option is not
+                                                                                // required
+                .setGuildOnly(true)
+                .queue();
         jda.upsertCommand("deviner", "Devinez un mot")
                 .addOption(OptionType.STRING, "mot", "Le mot à deviner", true)
-                .setGuildOnly(true).queue();
-
+                .setGuildOnly(true)
+                .queue();
     }
+
 }
