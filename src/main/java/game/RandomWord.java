@@ -23,34 +23,21 @@ public class RandomWord extends ListenerAdapter {
         String word = words.get(random.nextInt(words.size()));
         int wordLength = word.length();
 
-        // Sélectionner deux indices aléatoires distincts
         int firstIndex = random.nextInt(wordLength);
         int secondIndex = random.nextInt(wordLength);
         while (secondIndex == firstIndex) {
             secondIndex = random.nextInt(wordLength);
         }
 
-        StringBuilder maskedWord = new StringBuilder();
+        StringBuilder maskedWord = new StringBuilder(wordLength);
 
-        if (wordLength < 6) {
-            for (int i = 0; i < wordLength; i++) {
-                if (i == firstIndex) {
-                    maskedWord.append(word.charAt(i));
-                } else {
-                    maskedWord.append('-');
-                }
+        for (int i = 0; i < wordLength; i++) {
+            char c = '-';
+            if (i == firstIndex || (i == secondIndex && wordLength >= 6)) {
+                c = word.charAt(i);
             }
-        } else {
-            for (int i = 0; i < wordLength; i++) {
-                if (i == firstIndex || i == secondIndex) {
-                    maskedWord.append(word.charAt(i));
-                } else {
-                    maskedWord.append('-');
-                }
-            }
+            maskedWord.append(c);
         }
-
-        // Construire le mot masqué avec des tirets
 
         return maskedWord.toString();
     }
