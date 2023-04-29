@@ -19,7 +19,9 @@ public class Initialization {
                 .addEventListeners(new Command(), new EventsListener())
                 .build();
 
-        jda.upsertCommand("jouer", "Lancez une partie de MOTUS").setGuildOnly(true).queue();
+        jda.upsertCommand("jouer", "Lancez une partie de MOTUS")
+
+                .addOption(OptionType.STRING, "mot", "Le mot à deviner", false, false).setGuildOnly(true).queue();
         jda.upsertCommand("deviner", "Devinez un mot")
                 .addOption(OptionType.STRING, "mot", "Le mot à deviner", true)
                 .setGuildOnly(true).queue();

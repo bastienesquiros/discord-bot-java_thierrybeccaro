@@ -19,7 +19,7 @@ public class GuessWord {
 
     public void tryGuess(String userWord) {
         if (userWord == null || userWord.length() != targetWord.length()) {
-            return;
+            return; // HANDLE ERROR
         }
 
         StringBuilder updatedMaskedWord = new StringBuilder(maskedWord);

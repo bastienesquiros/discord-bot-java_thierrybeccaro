@@ -14,11 +14,21 @@ public class Command extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (event.getName().equals("jouer")) {
-            Pair<String, String> wordPair = randomWord.getTargetAndMaskedWord();
-            String targetWord = wordPair.getKey();
-            String maskedWord = wordPair.getValue();
-            event.reply("Devinez le mot : " + maskedWord).queue();
-            guessWord = new GuessWord(targetWord, maskedWord);
+            if (event.getOption("mot").getAsString() == null) {
+                Pair<String, String> wordPair = randomWord.getTargetAndMaskedWord();
+                String targetWord = wordPair.getKey();
+                String maskedWord = wordPair.getValue();
+                event.reply("Devinez le mot : " + maskedWord).queue();
+                guessWord = new GuessWord(targetWord, maskedWord);
+
+            } else if (event.getOption("mot").getAsString() != null) {
+                String targetWord = event.getOption("mot").getAsString();
+                String maskedWord = "-".repeat(targetWord.length());
+                String message = "Devinez le mot : " + maskedWord;
+                event.reply(message).queue();
+                guessWord = new GuessWord(targetWord, maskedWord);
+            }
+
         } else if (event.getName().equals("deviner")) {
             if (guessWord == null) {
                 event.reply("Veuillez d'abord lancer une partie avec la commande /jouer").queue();
@@ -29,7 +39,7 @@ public class Command extends ListenerAdapter {
             String updatedMaskedWord = guessWord.getMaskedWord();
 
             if (guessWord.isWordComplete()) {
-                event.reply("Bravo ! Vous avez trouvé le mot : " + updatedMaskedWord).queue();
+                event.reply("Bravo ! Vous avez trouvé le mot : " + updatedMaskedWord.toUpperCase()).queue();
                 guessWord = null;
             } else {
                 event.reply("Mot mis à jour : " + updatedMaskedWord).queue();
