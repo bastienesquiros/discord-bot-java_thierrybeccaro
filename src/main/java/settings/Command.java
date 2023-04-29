@@ -9,8 +9,8 @@ public class Command extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
-        if (event.getName().equals("fart")) {
-            event.reply("You just farted").queue();
+        if (event.getName().equals("jouer")) {
+            event.reply("Integration du jeu").queue();
         }
     }
 }
