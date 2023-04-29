@@ -5,6 +5,7 @@ import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Initialization {
@@ -19,6 +20,9 @@ public class Initialization {
                 .build();
 
         jda.upsertCommand("jouer", "Lancez une partie de MOTUS").setGuildOnly(true).queue();
+        jda.upsertCommand("deviner", "Devinez un mot")
+                .addOption(OptionType.STRING, "mot", "Le mot à deviner", true)
+                .setGuildOnly(true).queue();
 
     }
 }

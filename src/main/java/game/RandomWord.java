@@ -19,28 +19,39 @@ public class RandomWord extends ListenerAdapter {
         words.add("MAMADOU");
     }
 
-    public String getRandomWord() {
+    public Pair<String, String> getTargetAndMaskedWord() {
         String word = words.get(random.nextInt(words.size()));
         int wordLength = word.length();
 
+        // Sélectionner deux indices aléatoires distincts
         int firstIndex = random.nextInt(wordLength);
         int secondIndex = random.nextInt(wordLength);
         while (secondIndex == firstIndex) {
             secondIndex = random.nextInt(wordLength);
         }
 
-        StringBuilder maskedWord = new StringBuilder(wordLength);
+        StringBuilder maskedWord = new StringBuilder();
 
-        for (int i = 0; i < wordLength; i++) {
-            char c = '-';
-            if (i == firstIndex || (i == secondIndex && wordLength >= 6)) {
-                c = word.charAt(i);
+        if (wordLength < 6) {
+            for (int i = 0; i < wordLength; i++) {
+                if (i == firstIndex) {
+                    maskedWord.append(word.charAt(i));
+                } else {
+                    maskedWord.append('-');
+                }
             }
-            maskedWord.append(c);
+        } else {
+            for (int i = 0; i < wordLength; i++) {
+                if (i == firstIndex || i == secondIndex) {
+                    maskedWord.append(word.charAt(i));
+                } else {
+                    maskedWord.append('-');
+                }
+            }
         }
 
-        return maskedWord.toString();
-    }
+        // Construire le mot masqué avec des tirets
 
-    // public boolean isMatching(){}
+        return new Pair<>(word, maskedWord.toString());
+    }
 }
