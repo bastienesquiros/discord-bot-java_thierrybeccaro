@@ -17,20 +17,20 @@ public class Initialization {
                         GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_REACTIONS,
                         GatewayIntent.MESSAGE_CONTENT)
                 .setActivity(Activity.playing("MOTUS"))
-                .addEventListeners(new Command(), new EventsListener())
-                .build();
+                .addEventListeners(new CommandListener(), new MessageListener())
+                .build()
+                .awaitReady();
 
         jda.upsertCommand("jouer", "Lancez une partie de MOTUS")
-                .addOption(OptionType.STRING, "mot", "Le mot à deviner", false) // false means this
-                                                                                // option is not
-                                                                                // required
+                .addOption(OptionType.STRING, "mot", "Le mot à deviner", false)
                 .setGuildOnly(true)
                 .queue();
         jda.upsertCommand("deviner", "Devinez un mot")
                 .addOption(OptionType.STRING, "mot", "Le mot à deviner", true)
                 .setGuildOnly(true)
                 .queue();
-        jda.upsertCommand("reset", "Annule la partie en cours").setGuildOnly(true).queue();
+        jda.upsertCommand("reset", "Réinitialisez Thierry").setGuildOnly(true).queue();
+        jda.upsertCommand("stop", "Arrêtez la partie en cours").setGuildOnly(true).queue();
 
     }
 
