@@ -30,6 +30,8 @@ public class Initialization {
                 .addOption(OptionType.STRING, "mot", "Le mot à deviner", true)
                 .setGuildOnly(true)
                 .queue();
+        jda.upsertCommand("reset", "Annule la partie en cours").setGuildOnly(true).queue();
+
     }
 
 }
