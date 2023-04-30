@@ -17,9 +17,11 @@ public class Command extends ListenerAdapter {
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (event.getName().equals("jouer")) {
             if (event.getOption("mot") != null) {
-                String word = event.getOption("mot").getAsString();
+                String word = event.getOption("mot").getAsString().toUpperCase();
+                String maskedWord = word.charAt(0) + "" + word.charAt(1) + "-".repeat(Math.max(0, word.length() - 2));
+
                 chooseWord = new ChooseWord(word.toUpperCase());
-                event.reply("Devinez le mot : " + chooseWord.getMaskedWord()).queue();
+                event.reply("Devinez le mot : " + maskedWord).queue();
             } else {
                 Pair<String, String> wordPair = randomWord.getTargetAndMaskedWord();
                 String targetWord = wordPair.getKey();
