@@ -7,12 +7,14 @@ import java.util.Random;
 public class GuessingGame {
 
     private String targetWord;
-
+    private List<String> maskedWordHistoric;
     private String maskedWord;
     private final Random random = new Random();
 
     public GuessingGame(String targetWord) {
         this.targetWord = targetWord.toUpperCase();
+        this.maskedWordHistoric = new ArrayList<>();
+
         int wordLength = targetWord.length();
         int firstIndex = random.nextInt(wordLength);
         int secondIndex = (wordLength < 6) ? -1 : random.nextInt(wordLength);
@@ -30,6 +32,7 @@ public class GuessingGame {
             }
         }
         maskedWord = maskedWordBuilder.toString();
+        maskedWordHistoric.add(maskedWord);
     }
 
     public GuessingGame() {
@@ -40,6 +43,8 @@ public class GuessingGame {
         words.add("JEANNE");
         words.add("PETEUR");
         words.add("MAMADOU");
+
+        this.maskedWordHistoric = new ArrayList<>();
 
         targetWord = words.get(random.nextInt(words.size())).toUpperCase();
         int wordLength = targetWord.length();
@@ -58,6 +63,7 @@ public class GuessingGame {
             }
         }
         maskedWord = maskedWordBuilder.toString();
+        maskedWordHistoric.add(maskedWord);
     }
 
     public String getMaskedWord() {
@@ -66,6 +72,10 @@ public class GuessingGame {
 
     public String getTargetWord() {
         return targetWord;
+    }
+
+    public List<String> getMaskedWordHistoric() {
+        return maskedWordHistoric;
     }
 
     public boolean isWordComplete() {
@@ -88,5 +98,6 @@ public class GuessingGame {
         }
 
         maskedWord = updatedMaskedWord.toString();
+        maskedWordHistoric.add(maskedWord);
     }
 }

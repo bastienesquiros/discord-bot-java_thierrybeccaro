@@ -1,5 +1,7 @@
 package settings;
 
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 
 import game.GuessingGame;
@@ -60,7 +62,7 @@ public class CommandListener extends ListenerAdapter {
         event.getChannel().sendMessage("Entrez un mot de " + game.getMaskedWord().length() + " lettres").queue();
 
         String maskedWord = game.getMaskedWord().toUpperCase();
-        event.getChannel().sendMessage(convertToRegionalIndicatorEmojis(maskedWord)).queue();
+        event.getChannel().sendMessage(EmojiConverter.convertToRegionalIndicatorEmojis(maskedWord)).queue();
     }
 
     public void deviner(SlashCommandInteractionEvent event) {
@@ -74,34 +76,29 @@ public class CommandListener extends ListenerAdapter {
 
         String guess = event.getOption("mot") != null ? event.getOption("mot").getAsString() : null;
         if (guess == null || guess.length() != game.getMaskedWord().length()) {
-            event.deferReply().complete().sendMessage(
+            event.getHook().sendMessage(
                     "Erreur. Vous devez proposer des mots de " + game.getMaskedWord().length()
                             + " lettres uniquement. Réessayez.")
-                    .queue();
+                    .complete();
             return;
         }
 
-        String maskedWordBefore = game.getMaskedWord();
         game.tryGuess(guess);
-        String maskedWordAfter = game.getMaskedWord();
 
         if (game.isWordComplete()) {
-            event.deferReply().complete()
-                    .sendMessage("Bravo, vous avez trouvé le mot !")
-                    .queue();
-            event.getChannel()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordBefore)).queue();
-            event.getChannel()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordAfter)).queue();
+            event.deferReply().complete().sendMessage("Bravo, vous avez trouvé le mot ! Le mot était: "
+                    + EmojiConverter.convertToRegionalIndicatorEmojis(game.getTargetWord()))
+                    .complete();
             isPlaying = false;
         } else {
-            event.deferReply().complete()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordBefore))
-                    .queue();
-            event.getChannel()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordAfter)).queue();
-        }
+            List<String> maskedWordHistoric = game.getMaskedWordHistoric();
+            for (String maskedWord : maskedWordHistoric) {
+                event.deferReply().complete()
+                        .sendMessage(EmojiConverter.convertToRegionalIndicatorEmojis(maskedWord))
+                        .complete();
+            }
 
+        }
     }
 
     public void stop(SlashCommandInteractionEvent event) {
@@ -112,7 +109,9 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        event.deferReply().complete().sendMessage("La partie est terminée. Le mot était: " + game.getTargetWord())
+        event.deferReply().complete()
+                .sendMessage("La partie est terminée. Le mot était: "
+                        + EmojiConverter.convertToRegionalIndicatorEmojis(game.getTargetWord()))
                 .queue();
         isPlaying = false;
     }
@@ -121,19 +120,6 @@ public class CommandListener extends ListenerAdapter {
         game = null;
         isPlaying = false;
         event.deferReply().complete().sendMessage("Bip Bop... Thierry a été réinitialisé.").queue();
-    }
-
-    public String convertToRegionalIndicatorEmojis(String input) {
-        StringBuilder output = new StringBuilder();
-        for (char c : input.toCharArray()) {
-            if (Character.isLetter(c)) {
-                char lowerCaseChar = Character.toLowerCase(c);
-                output.append(":regional_indicator_").append(lowerCaseChar).append(": ");
-            } else {
-                output.append(":red_square: ");
-            }
-        }
-        return output.toString();
     }
 
 }
