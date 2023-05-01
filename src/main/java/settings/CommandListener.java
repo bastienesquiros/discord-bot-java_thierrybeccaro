@@ -85,23 +85,23 @@ public class CommandListener extends ListenerAdapter {
         game.tryGuess(guess);
         List<String> previousMaskedWords = game.getPreviousMaskedWords();
         StringBuilder sb = new StringBuilder();
-        for (String maskedWord : previousMaskedWords) {
-            sb.append(convertToRegionalIndicatorEmojis(maskedWord)).append("\n");
+        for (int i = 0; i < previousMaskedWords.size() - 1; i++) { // Ignore the last masked word
+            sb.append(convertToRegionalIndicatorEmojis(previousMaskedWords.get(i))).append("\n");
         }
 
         if (game.isWordComplete()) {
             event.deferReply().complete()
                     .sendMessage("Bravo, vous avez trouvé le mot !")
                     .queue();
+            sb.append(convertToRegionalIndicatorEmojis(game.getMaskedWord())).append("\n");
             event.getChannel()
                     .sendMessage(sb.toString()).queue();
             isPlaying = false;
         } else {
+            sb.append(convertToRegionalIndicatorEmojis(game.getMaskedWord())).append("\n");
             event.deferReply().complete()
-                    .sendMessage(convertToRegionalIndicatorEmojis(game.getMaskedWord()))
+                    .sendMessage(sb.toString())
                     .queue();
-            event.getChannel()
-                    .sendMessage(sb.toString()).queue();
         }
     }
 
