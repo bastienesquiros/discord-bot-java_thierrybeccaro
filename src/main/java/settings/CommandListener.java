@@ -1,11 +1,8 @@
 package settings;
 
 import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
-
 import game.GuessingGame;
-
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -34,7 +31,6 @@ public class CommandListener extends ListenerAdapter {
             case "stop":
                 stop(event);
                 break;
-
             default:
                 break;
         }
@@ -87,7 +83,7 @@ public class CommandListener extends ListenerAdapter {
         List<String> previousMaskedWords = game.getPreviousMaskedWords();
         StringBuilder sb = new StringBuilder();
         for (String maskedWord : previousMaskedWords) {
-            sb.append(convertToRegionalIndicatorEmojis(maskedWord)).append("\n");
+            sb.append(EmojiConverter.convertToRegionalIndicatorEmojis(maskedWord)).append("\n");
         }
 
         if (game.isWordComplete()) {
@@ -98,10 +94,8 @@ public class CommandListener extends ListenerAdapter {
                     .sendMessage(sb.toString()).queue();
             isPlaying = false;
         } else {
+
             event.deferReply().complete()
-                    .sendMessage(convertToRegionalIndicatorEmojis(game.getMaskedWord()))
-                    .queue();
-            event.getChannel()
                     .sendMessage(sb.toString()).queue();
         }
     }
@@ -127,16 +121,4 @@ public class CommandListener extends ListenerAdapter {
         event.deferReply().complete().sendMessage("Bip Bop... Thierry a été réinitialisé.").queue();
     }
 
-    public String convertToRegionalIndicatorEmojis(String input) {
-        StringBuilder output = new StringBuilder();
-        for (char c : input.toCharArray()) {
-            if (Character.isLetter(c)) {
-                char lowerCaseChar = Character.toLowerCase(c);
-                output.append(":regional_indicator_").append(lowerCaseChar).append(": ");
-            } else {
-                output.append(":red_square: ");
-            }
-        }
-        return output.toString();
-    }
 }

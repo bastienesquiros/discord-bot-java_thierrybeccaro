@@ -1,8 +1,13 @@
 package game;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.json.JSONArray;
 
 public class GuessingGame {
     private String targetWord;
@@ -17,12 +22,17 @@ public class GuessingGame {
 
     public GuessingGame() {
         List<String> words = new ArrayList<>();
-        // FETCH WORDS FROM API AND ADD TO THE LIST
-        words.add("TEST");
-        words.add("THIBOL");
-        words.add("JEANNE");
-        words.add("PETEUR");
-        words.add("MAMADOU");
+
+        try {
+            String content = new String(Files.readAllBytes(Paths.get("words.json")));
+            JSONArray jsonArray = new JSONArray(content);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                words.add(jsonArray.getString(i));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         targetWord = words.get(random.nextInt(words.size())).toUpperCase();
         initializeMaskedWord();
@@ -46,20 +56,7 @@ public class GuessingGame {
         }
         maskedWord = maskedWordBuilder.toString();
 
-        // Ajouter le mot masqué initial à la liste des mots masqués précédents
         previousMaskedWords.add(maskedWord);
-    }
-
-    public String getMaskedWord() {
-        return maskedWord;
-    }
-
-    public String getTargetWord() {
-        return targetWord;
-    }
-
-    public boolean isWordComplete() {
-        return !maskedWord.contains("-");
     }
 
     public boolean tryGuess(String guess) {
@@ -84,7 +81,20 @@ public class GuessingGame {
         }
     }
 
+    public String getMaskedWord() {
+        return maskedWord;
+    }
+
+    public String getTargetWord() {
+        return targetWord;
+    }
+
+    public boolean isWordComplete() {
+        return !maskedWord.contains("-");
+    }
+
     public List<String> getPreviousMaskedWords() {
         return previousMaskedWords;
     }
+
 }
