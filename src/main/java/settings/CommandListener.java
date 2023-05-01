@@ -55,8 +55,12 @@ public class CommandListener extends ListenerAdapter {
 
         isPlaying = true;
 
-        event.deferReply().complete().sendMessage("Devinez le mot suivant: " + game.getMaskedWord().toUpperCase())
-                .queue();
+        event.deferReply().complete().sendMessage("Démarrage de la partie. Mo Mo Motus !").queue();
+
+        event.getChannel().sendMessage("Entrez un mot de " + game.getMaskedWord().length() + " lettres").queue();
+
+        String maskedWord = game.getMaskedWord().toUpperCase();
+        event.getChannel().sendMessage(convertToRegionalIndicatorEmojis(maskedWord)).queue();
     }
 
     public void deviner(SlashCommandInteractionEvent event) {
@@ -77,15 +81,27 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
+        String maskedWordBefore = game.getMaskedWord();
         game.tryGuess(guess);
+        String maskedWordAfter = game.getMaskedWord();
 
         if (game.isWordComplete()) {
-            event.deferReply().complete().sendMessage("Bravo! Vous avez deviné: " + game.getMaskedWord().toUpperCase())
+            event.deferReply().complete()
+                    .sendMessage("Bravo, vous avez trouvé le mot !")
                     .queue();
+            event.getChannel()
+                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordBefore)).queue();
+            event.getChannel()
+                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordAfter)).queue();
             isPlaying = false;
         } else {
-            event.deferReply().complete().sendMessage("Devinez le mot: " + game.getMaskedWord().toUpperCase()).queue();
+            event.deferReply().complete()
+                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordBefore))
+                    .queue();
+            event.getChannel()
+                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordAfter)).queue();
         }
+
     }
 
     public void stop(SlashCommandInteractionEvent event) {
@@ -106,4 +122,18 @@ public class CommandListener extends ListenerAdapter {
         isPlaying = false;
         event.deferReply().complete().sendMessage("Bip Bop... Thierry a été réinitialisé.").queue();
     }
+
+    public String convertToRegionalIndicatorEmojis(String input) {
+        StringBuilder output = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (Character.isLetter(c)) {
+                char lowerCaseChar = Character.toLowerCase(c);
+                output.append(":regional_indicator_").append(lowerCaseChar).append(": ");
+            } else {
+                output.append(":red_square: ");
+            }
+        }
+        return output.toString();
+    }
+
 }
