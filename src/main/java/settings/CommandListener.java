@@ -1,6 +1,7 @@
 package settings;
 
 import org.jetbrains.annotations.NotNull;
+import java.util.List;
 
 import game.GuessingGame;
 
@@ -81,27 +82,27 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String maskedWordBefore = game.getMaskedWord();
         game.tryGuess(guess);
-        String maskedWordAfter = game.getMaskedWord();
+        List<String> previousMaskedWords = game.getPreviousMaskedWords();
+        StringBuilder sb = new StringBuilder();
+        for (String maskedWord : previousMaskedWords) {
+            sb.append(convertToRegionalIndicatorEmojis(maskedWord)).append("\n");
+        }
 
         if (game.isWordComplete()) {
             event.deferReply().complete()
                     .sendMessage("Bravo, vous avez trouvé le mot !")
                     .queue();
             event.getChannel()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordBefore)).queue();
-            event.getChannel()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordAfter)).queue();
+                    .sendMessage(sb.toString()).queue();
             isPlaying = false;
         } else {
             event.deferReply().complete()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordBefore))
+                    .sendMessage(convertToRegionalIndicatorEmojis(game.getMaskedWord()))
                     .queue();
             event.getChannel()
-                    .sendMessage(convertToRegionalIndicatorEmojis(maskedWordAfter)).queue();
+                    .sendMessage(sb.toString()).queue();
         }
-
     }
 
     public void stop(SlashCommandInteractionEvent event) {
