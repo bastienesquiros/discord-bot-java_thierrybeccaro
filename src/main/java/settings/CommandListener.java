@@ -84,20 +84,25 @@ public class CommandListener extends ListenerAdapter {
         }
 
         game.tryGuess(guess);
+        List<String> previousMaskedWords = game.getPreviousMaskedWords();
+        StringBuilder sb = new StringBuilder();
+        for (String maskedWord : previousMaskedWords) {
+            sb.append(convertToRegionalIndicatorEmojis(maskedWord)).append("\n");
+        }
 
         if (game.isWordComplete()) {
-            event.deferReply().complete().sendMessage("Bravo, vous avez trouvé le mot ! Le mot était: "
-                    + EmojiConverter.convertToRegionalIndicatorEmojis(game.getTargetWord()))
-                    .complete();
+            event.deferReply().complete()
+                    .sendMessage("Bravo, vous avez trouvé le mot !")
+                    .queue();
+            event.getChannel()
+                    .sendMessage(sb.toString()).queue();
             isPlaying = false;
         } else {
-            List<String> maskedWordHistoric = game.getMaskedWordHistoric();
-            for (String maskedWord : maskedWordHistoric) {
-                event.deferReply().complete()
-                        .sendMessage(EmojiConverter.convertToRegionalIndicatorEmojis(maskedWord))
-                        .complete();
-            }
-
+            event.deferReply().complete()
+                    .sendMessage(convertToRegionalIndicatorEmojis(game.getMaskedWord()))
+                    .queue();
+            event.getChannel()
+                    .sendMessage(sb.toString()).queue();
         }
     }
 
@@ -122,4 +127,16 @@ public class CommandListener extends ListenerAdapter {
         event.deferReply().complete().sendMessage("Bip Bop... Thierry a été réinitialisé.").queue();
     }
 
+    public String convertToRegionalIndicatorEmojis(String input) {
+        StringBuilder output = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (Character.isLetter(c)) {
+                char lowerCaseChar = Character.toLowerCase(c);
+                output.append(":regional_indicator_").append(lowerCaseChar).append(": ");
+            } else {
+                output.append(":red_square: ");
+            }
+        }
+        return output.toString();
+    }
 }
